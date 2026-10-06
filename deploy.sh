@@ -8,7 +8,7 @@ NETLIFY_AUTH_TOKEN="${NETLIFY_AUTH_TOKEN:-$(jq -r '.users[.userId].auth.token' "
 if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ "$NETLIFY_AUTH_TOKEN" = "null" ]; then
   echo "deploy: no NETLIFY_AUTH_TOKEN"; exit 1
 fi
-ZIP="$(mktemp /tmp/gargantua-deploy.XXXXXX.zip)"
+ZIP="/tmp/gargantua-deploy.$$.zip"; rm -f "$ZIP"
 zip -qr "$ZIP" index.html css js vendor audio
 echo "[deploy] uploading $(du -h "$ZIP" | cut -f1) to site $NETLIFY_SITE_ID ..."
 RESP="$(curl -s -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
