@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# auto-deploy to Netlify after every commit (log to .deploy.log)
+cd "$(git rev-parse --show-toplevel)"
+echo "[$(date '+%F %T')] commit $(git rev-parse --short HEAD) → deploy" >> .deploy.log
+nohup ./deploy.sh >> .deploy.log 2>&1 &

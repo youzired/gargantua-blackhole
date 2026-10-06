@@ -1,0 +1,20 @@
+name: Deploy → Netlify
+on:
+  push: { branches: [main] }
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: zip -qr site.zip index.html css js vendor audio
+      - name: Upload deploy zip
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID:    ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          curl -sS -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+               -H "Content-Type: application/zip" --data-binary @site.zip \
+               "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys" \
+            | tee /tmp/d.json
+          echo "Live: $(jq -r .ssl_url /tmp/d.json)"

@@ -1,0 +1,13 @@
+# Pure static ESM site — nothing to build. Publish repo root.
+[build]
+  publish = "."
+  command = ""
+
+[build.processing]
+  skip_processing = false
+[build.processing.css]  bundle = false; minify = false
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
